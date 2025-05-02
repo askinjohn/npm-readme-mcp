@@ -7,8 +7,8 @@ An MCP (Model Context Protocol) server that provides tools to fetch README files
 ## Features
 
 *   Provides MCP tools to interact with the npm registry.
-*   `fetchReadme`: Fetches the README content and optionally metadata for a given npm package.
-*   `searchPackages`: Searches for npm packages based on a query string.
+*   `fetchReadme`: Fetches the README content (Markdown and HTML) and optionally metadata for a given npm package.
+*   `searchPackages`: Searches for npm packages based on query text, author, and/or keywords. Results are sorted by popularity by default, but this can be customized.
 
 ## MCP Client Configuration
 
@@ -98,7 +98,7 @@ Returns a JSON string containing the `readme` (string), `readmeHtml` (string), a
 
 ### 2. `searchPackages`
 
-Searches the npm registry for packages matching a query.
+Searches the npm registry for packages. Allows filtering by query text, author, and keywords. Results are sorted by a combination of popularity and quality by default.
 
 **Input Schema:**
 
@@ -106,19 +106,84 @@ Searches the npm registry for packages matching a query.
 {
   "query": {
     "type": "string",
-    "description": "Search query for npm packages (e.g., 'react state management')"
+    "optional": true,
+    "description": "General search query text (e.g., 'react state management')."
+  },
+  "author": {
+    "type": "string",
+    "optional": true,
+    "description": "Filter packages by author username (e.g., 'gaearon')."
+  },
+  "keywords": {
+    "type": "array",
+    "items": { "type": "string" },
+    "optional": true,
+    "default": [],
+    "description": "Filter packages by keywords (e.g., ['react', 'state']). Requires exact keyword match."
   },
   "limit": {
     "type": "number",
+    "optional": true,
     "default": 10,
-    "description": "Maximum number of search results to return"
+    "description": "Maximum number of search results to return."
+  },
+  "sortByPopularity": {
+    "type": "boolean",
+    "optional": true,
+    "default": true,
+    "description": "Sort results primarily by download count/popularity. Set to false for default npm relevance sorting."
+  },
+  "popularityWeight": {
+    "type": "number",
+    "minimum": 0,
+    "maximum": 1,
+    "optional": true,
+    "default": 0.8,
+    "description": "Weight (0-1) for the popularity factor when sortByPopularity is true. Higher value prioritizes downloads more."
   }
 }
 ```
+*Note: At least one of `query`, `author`, or `keywords` must be provided.*
 
 **Output:**
 
-Returns a JSON string containing an object with `packages` (array of search results), `total` (number of results returned), and the original `query`.
+Returns a JSON string containing an object with:
+*   `packages`: An array of search result objects, each containing details like `name`, `version`, `description`, `author`, `keywords`, `links`, `score`, etc.
+*   `total`: The number of results returned (limited by the `limit` parameter).
+*   `query`: A string describing the effective search criteria used.
+*   `sortedByPopularity`: A boolean indicating if popularity sorting was applied.
+
+**Usage Examples:**
+
+*   **Simple query (sorted by popularity by default):**
+    ```json
+    { "query": "react state management" }
+    ```
+*   **Search by author:**
+    ```json
+    { "author": "angular" }
+    ```
+*   **Search by keywords:**
+    ```json
+    { "keywords": ["react", "chart"] }
+    ```
+*   **Combined search:**
+    ```json
+    { "query": "data grid", "keywords": ["react"] }
+    ```
+*   **"Charts for Angular" (special handling):**
+    ```json
+    { "query": "charts for angular" }
+    ```
+    *(Server treats this like `keywords: ["charts", "angular"]`)*
+*   **Prioritize popularity heavily:**
+    ```json
+    { "query": "web framework", "sortByPopularity": true, "popularityWeight": 0.95, "limit": 5 }
+    ```
+*   **Disable popularity sorting (use npm default relevance):**
+    ```json
+    { "query": "web framework", "sortByPopularity": false }
+    ```
 
 ## Development
 
@@ -161,9 +226,7 @@ bun run build
 
 **5. Run tests:**
 
-```bash
-bun test
-```
+
 
 ## License
 

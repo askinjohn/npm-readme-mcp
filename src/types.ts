@@ -127,10 +127,14 @@ export interface NpmPackageAuthor {
     includeMetadata?: boolean;
   }
   
-  export interface SearchQueryInput {
-    query: string;
-    limit?: number;
-  }
+export interface SearchQueryInput {
+  query?: string;
+  author?: string;
+  keywords?: string[];
+  limit?: number;
+  sortByPopularity?: boolean;
+  popularityWeight?: number; // 0-1
+}
   
   export interface PackageMetadataOutput {
     name: string;

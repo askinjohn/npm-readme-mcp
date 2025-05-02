@@ -88,14 +88,57 @@ export class NpmClient {
 
   /**
    * Searches for packages in the npm registry
-   * @param query The search query
-   * @param limit Maximum number of results to return
+   * @param options Options including query, author, keywords, limit, sortByPopularity, and popularityWeight
    * @returns Array of search results
    */
-  async searchPackages(query: string, limit: number = 10): Promise<NpmSearchPackage[]> {
+  async searchPackages(options: {
+    query?: string;
+    author?: string;
+    keywords?: string[];
+    limit?: number;
+    sortByPopularity?: boolean;
+    popularityWeight?: number;
+  }): Promise<NpmSearchPackage[]> {
     try {
-      // Encode the query parameters
-      const searchUrl = `${this.baseUrl}/-/v1/search?text=${encodeURIComponent(query)}&size=${limit}`;
+      const { 
+        query = "", 
+        author = "", 
+        keywords = [], 
+        limit = 10,
+        sortByPopularity = true, // Default to sorting by popularity
+        popularityWeight = 0.8 // Default weight when sorting
+      } = options;
+      
+      // Build the text part of the search query
+      let searchText = query;
+      if (author) {
+        searchText += ` author:${author}`;
+      }
+      if (keywords.length > 0) {
+        keywords.forEach(keyword => {
+          searchText += ` keywords:${keyword}`;
+        });
+      }
+      
+      // Configure search parameters using URLSearchParams
+      const params = new URLSearchParams();
+      params.append('text', searchText.trim());
+      params.append('size', limit.toString());
+      
+      // Configure sorting by popularity if requested
+      if (sortByPopularity) {
+        // Ensure weight is within bounds 0-1
+        const validPopularityWeight = Math.max(0, Math.min(1, popularityWeight));
+        // Set popularity as the primary factor
+        params.append('popularity', validPopularityWeight.toString());
+        // Use remaining weight for quality
+        params.append('quality', (1 - validPopularityWeight).toString());
+        // Set maintenance to zero to focus sorting on popularity/quality
+        params.append('maintenance', '0.0');
+      }
+      
+      // Complete the URL
+      const searchUrl = `${this.baseUrl}/-/v1/search?${params.toString()}`;
       
       const response = await axios.get<NpmSearchResult>(searchUrl);
       
