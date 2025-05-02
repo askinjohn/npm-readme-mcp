@@ -6,7 +6,7 @@ import {
   PackageMetadataOutput,
   NpmSearchResult,
   NpmSearchPackage
-} from './types';
+} from './types.js'; // Added .js extension
 
 export class NpmClient {
   private readonly baseUrl: string = 'https://registry.npmjs.org';

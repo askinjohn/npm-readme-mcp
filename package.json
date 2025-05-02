@@ -1,15 +1,15 @@
-{
-  "name": "npm-readme-mcp",
-  "version": "1.0.0",
-  "description": "An MCP server to extract README files from npm packages",
-  "type": "module",
-  "scripts": {
-    "start": "bun src/index.ts",
-    "dev": "bun --watch src/index.ts",
-    "build": "bun build src/index.ts --outdir=dist",
-   "test": "bun test"
-   },
-   "main": "dist/index.js",
+ {
+   "name": "npm-readme-mcp",
+   "version": "1.0.2", 
+   "description": "An MCP server to extract README files from npm packages",
+   "type": "module",
+   "scripts": {
+     "start": "bun src/index.ts",
+     "dev": "bun --watch src/index.ts",
+     "build": "tsc", 
+    "test": "bun test"
+    },
+    "main": "dist/index.js",
    "bin": {
      "npm-readme-mcp": "dist/index.js"
    },

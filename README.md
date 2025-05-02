@@ -10,22 +10,21 @@ An MCP (Model Context Protocol) server that provides tools to fetch README files
 *   `fetchReadme`: Fetches the README content and optionally metadata for a given npm package.
 *   `searchPackages`: Searches for npm packages based on a query string.
 
-## Installation (as an MCP Server)
+## MCP Client Configuration
 
-Once published, you can add this server to your MCP client configuration. The exact method depends on your client, but typically involves specifying the command to run the server.
+There are two main ways to configure your MCP client to use this server:
 
-**Example MCP Client Configuration:**
+**1. Local Development Configuration:**
 
+When running the server directly from the source code during development (e.g., using `bun run dev` or `bun run start`), configure your MCP client to execute the source file with the `bun` runtime. You'll need the full path to your `bun` executable and the project's `src/index.ts` file.
+
+*Example (paths may vary):*
 ```json
 {
   "mcpServers": {
-    "npm-readme": {
-      // Use npx to run the installed package
-      "command": "npx",
-      "args": ["npm-readme-mcp"],
-      // Or, if installed globally:
-      // "command": "npm-readme-mcp",
-      // "args": [],
+    "npm-readme-dev": { // Use a different name to avoid conflicts
+      "command": "/Users/your_user/.bun/bin/bun", // Full path to bun executable
+      "args": ["/path/to/your/project/npm-readme-mcp/src/index.ts"], // Full path to source file
       "disabled": false
     }
     // ... other servers
@@ -33,7 +32,41 @@ Once published, you can add this server to your MCP client configuration. The ex
 }
 ```
 
-*Note: Ensure `npx` can find the package or that `npm-readme-mcp` is in the PATH if installed globally.*
+**2. Published Package Configuration:**
+
+After installing the package from npm, configure your MCP client to execute the command provided by the package. There are two common ways depending on how you installed it:
+
+*Example A: Using `npx` (Recommended for local project installations or without global install):*
+
+```json
+{
+  "mcpServers": {
+    "npm-readme": {
+      "command": "npx",
+      "args": ["npm-readme-mcp"], // Tell npx which package command to run
+      "disabled": false
+    }
+    // ... other servers
+  }
+}
+```
+*Note: `npx` will find the command if `npm-readme-mcp` is installed in the local project's `node_modules` or if it needs to download it.*
+
+*Example B: Using Global Installation (`npm install -g npm-readme-mcp`):*
+```json
+{
+  "mcpServers": {
+    "npm-readme": {
+      "command": "npm-readme-mcp", // The command is directly available in PATH
+      "args": [], // No arguments needed for the command itself
+      "disabled": false
+    }
+    // ... other servers
+  }
+}
+```
+
+*Important: Both configurations rely on the package being built correctly (using `tsc`) before publishing.*
 
 ## Provided Tools
 

@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
-import { NpmClient } from './npm-client';
+import { NpmClient } from './npm-client.js'; // Added .js extension
 import { z } from 'zod';
 
 async function main() {
