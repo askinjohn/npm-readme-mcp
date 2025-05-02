@@ -1,6 +1,6 @@
  {
    "name": "npm-readme-mcp",
-   "version": "1.1.0", 
+   "version": "1.1.1", 
    "description": "An MCP server to extract README files and search npm packages with advanced filtering and sorting.",
    "type": "module",
    "scripts": {
