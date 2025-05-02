@@ -1,5 +1,7 @@
 # npm-readme-mcp
 
+![npm-readme-mcp Logo](https://raw.githubusercontent.com/askinjohn/npm-readme-mcp/main/src/assets/npm_mcp.png)
+
 [![npm version](https://badge.fury.io/js/npm-readme-mcp.svg)](https://badge.fury.io/js/npm-readme-mcp) <!-- Optional: Add after first publish -->
 
 An MCP (Model Context Protocol) server that provides tools to fetch README files and search for packages on npm. Built with Bun and TypeScript.
