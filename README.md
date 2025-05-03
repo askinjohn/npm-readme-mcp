@@ -2,7 +2,7 @@
 
 ![npm-readme-mcp Logo](https://raw.githubusercontent.com/askinjohn/npm-readme-mcp/main/src/assets/npm_mcp.png)
 
-[![npm version](https://badge.fury.io/js/npm-readme-mcp.svg)](https://badge.fury.io/js/npm-readme-mcp) <!-- Optional: Add after first publish -->
+[![npm version](https://badge.fury.io/js/npm-readme-mcp.svg)](https://badge.fury.io/js/npm-readme-mcp)
 
 An MCP (Model Context Protocol) server that provides tools to fetch README files and search for packages on npm. Built with Bun and TypeScript.
 
@@ -24,12 +24,12 @@ When running the server directly from the source code during development (e.g., 
 ```json
 {
   "mcpServers": {
-    "npm-readme-dev": { // Use a different name to avoid conflicts
-      "command": "/Users/your_user/.bun/bin/bun", // Full path to bun executable
-      "args": ["/path/to/your/project/npm-readme-mcp/src/index.ts"], // Full path to source file
+    "npm-readme-dev": { 
+      "command": "/Users/your_user/.bun/bin/bun", 
+      "args": ["/path/to/your/project/npm-readme-mcp/src/index.ts"], 
       "disabled": false
     }
-    // ... other servers
+   
   }
 }
 ```
@@ -45,10 +45,10 @@ After installing the package from npm, configure your MCP client to execute the 
   "mcpServers": {
     "npm-readme": {
       "command": "npx",
-      "args": ["npm-readme-mcp"], // Tell npx which package command to run
+      "args": ["npm-readme-mcp"], 
       "disabled": false
     }
-    // ... other servers
+   
   }
 }
 ```
@@ -59,16 +59,14 @@ After installing the package from npm, configure your MCP client to execute the 
 {
   "mcpServers": {
     "npm-readme": {
-      "command": "npm-readme-mcp", // The command is directly available in PATH
-      "args": [], // No arguments needed for the command itself
+      "command": "npm-readme-mcp",
+      "args": [], 
       "disabled": false
     }
-    // ... other servers
   }
 }
 ```
 
-*Important: Both configurations rely on the package being built correctly (using `tsc`) before publishing.*
 
 ## Provided Tools
 
@@ -225,8 +223,6 @@ This compiles the TypeScript code to JavaScript in the `dist` directory.
 ```bash
 bun run build
 ```
-
-**5. Run tests:**
 
 
 
